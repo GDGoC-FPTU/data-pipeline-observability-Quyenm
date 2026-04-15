@@ -17,21 +17,13 @@ Run `agent_simulation.py` with two datasets and record the results:
 
 ---
 
-## 2. Analysis & Observations
+## 2. Analysis
 
-### Why did the Agent fail when using Garbage Data?
+Why did the Agent fail when using Garbage Data?
 
-When using garbage data, the Agent produces completely incorrect results because the input data contains several serious issues in both structure and content:
+The agent failed because the garbage dataset breaks the assumptions that the selection logic depends on. It contains an unrealistic outlier, duplicate identifiers, missing fields, and text values inside the price column. When the agent reads this noisy input, it does not understand context or common sense; it only reacts to the values that appear in the file. As a result, the extreme price of "Nuclear Reactor" dominates the result and hides the normal products that a real user would expect. This shows that prompt quality alone is not enough. Without cleaning, validation, and transformation, bad data can directly produce bad decisions.
 
-1. **Outliers:** The presence of "Nuclear Reactor" with an extremely high price ($999,999) misleads the Agent’s decision-making logic. The Agent simply scans for the largest numerical value without understanding that this is an unrealistic entity in a normal shopping context.
-
-2. **Duplicate IDs:** Having multiple records with the same ID (e.g., id=1 appearing twice) creates confusion and reduces the consistency and uniqueness of the dataset.
-
-3. **Wrong Data Types:** The "price" field contains text values ("ten dollars") instead of numeric values, preventing the Agent from performing accurate comparisons or calculations.
-
-4. **Null Values:** Records with missing IDs or categories still pass through the system, reducing overall reliability.
-
-All these factors demonstrate that without preprocessing and validation, the Agent blindly trusts corrupted data, leading to harmful or incorrect decisions.
+More specifically, the outlier price pushes the agent toward the wrong recommendation, duplicate IDs reduce trust in the records, invalid price strings prevent reliable comparison, and null categories or IDs make the dataset incomplete. Clean data gives the model a fair input, while garbage data causes the model to amplify the errors already present in the table.
 
 ---
 
