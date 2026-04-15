@@ -1,41 +1,44 @@
 # Experiment Report: Data Quality Impact on AI Agent
 
-**Student ID:** 2A202600481
-**Name:** Nguyễn Mạnh Quyền 
+**Student ID:** 2A202600481  
+**Name:** Nguyen Manh Quyen  
 **Date:** 2026-04-15  
 
 ---
 
-## 1. Kết quả thí nghiệm
+## 1. Experiment Results
 
-Chạy `agent_simulation.py` với 2 bộ dữ liệu và ghi lại kết quả:
+Run `agent_simulation.py` with two datasets and record the results:
 
 | Scenario | Agent Response | Accuracy (1-10) | Notes |
 |----------|----------------|-----------------|-------|
-| **Clean Data** (`processed_data.csv`) | "Based on my data, the best choice is Laptop at $1200." | 9 | Phản hồi chính xác và hữu ích. Laptop được xác định đúng là mặt hàng điện tử hàng đầu. |
-| **Garbage Data** (`garbage_data.csv`) | "Based on my data, the best choice is Nuclear Reactor at $999999." | 1 | Hoàn toàn sai. Agent đề xuất một giá trị ngoại lệ cực đoan rõ ràng không phải là sản phẩm thực tế. |
+| **Clean Data** (`processed_data.csv`) | "Based on my data, the best choice is Laptop at $1200." | 9 | Accurate and useful response. Laptop is correctly identified as a top electronic product. |
+| **Garbage Data** (`garbage_data.csv`) | "Based on my data, the best choice is Nuclear Reactor at $999999." | 1 | Completely incorrect. The agent suggests an extreme outlier that is clearly not a realistic product. |
 
 ---
 
-## 2. Phân tích & nhận xét
+## 2. Analysis & Observations
 
-### Tại sao Agent trả lời sai khi dùng Garbage Data?
+### Why did the Agent fail when using Garbage Data?
 
-Khi dùng garbage data, Agent cho ra kết quả sai hoàn toàn vì dữ liệu đầu vào chứa nhiều vấn đề nghiêm trọng về cấu trúc và nội dung:
+When using garbage data, the Agent produces completely incorrect results because the input data contains several serious issues in both structure and content:
 
-1.  **Outliers (Giá trị ngoại lệ):** Sự xuất hiện của "Nuclear Reactor" với mức giá cực lớn ($999,999) đã đánh lừa logic tìm kiếm của Agent. Agent chỉ đơn thuần quét qua các con số lớn nhất mà không có khả năng phân biệt được đây là một thực thể phi lý trong danh mục mua sắm thông thường.
-2.  **Duplicate IDs (Trùng lặp ID):** Việc tồn tại nhiều bản ghi có cùng ID (ví dụ id=1 xuất hiện hai lần) gây ra sự nhiễu loạn thông tin, làm cho tập dữ liệu mất đi tính nhất quán và duy nhất.
-3.  **Wrong Data Types (Sai kiểu dữ liệu):** Trường "price" chứa giá trị dạng chữ ("ten dollars") thay vì số khiến Agent không thể thực hiện các phép toán so sánh hoặc tính toán trung bình một cách chính xác.
-4.  **Null Values (Giá trị rỗng):** Các bản ghi bị thiếu ID hoặc Category nhưng vẫn lọt qua bộ lọc làm giảm độ tin cậy của toàn bộ hệ thống. 
+1. **Outliers:** The presence of "Nuclear Reactor" with an extremely high price ($999,999) misleads the Agent’s decision-making logic. The Agent simply scans for the largest numerical value without understanding that this is an unrealistic entity in a normal shopping context.
 
-Tất cả những yếu tố trên chứng minh rằng nếu không có bước tiền xử lý và validation, Agent sẽ bị "mù quáng" tin vào dữ liệu sai lệch, dẫn đến các quyết định gây hại.
+2. **Duplicate IDs:** Having multiple records with the same ID (e.g., id=1 appearing twice) creates confusion and reduces the consistency and uniqueness of the dataset.
+
+3. **Wrong Data Types:** The "price" field contains text values ("ten dollars") instead of numeric values, preventing the Agent from performing accurate comparisons or calculations.
+
+4. **Null Values:** Records with missing IDs or categories still pass through the system, reducing overall reliability.
+
+All these factors demonstrate that without preprocessing and validation, the Agent blindly trusts corrupted data, leading to harmful or incorrect decisions.
 
 ---
 
-## 3. Kết luận
+## 3. Conclusion
 
-**Quality Data > Quality Prompt?** **Đồng ý hoàn toàn.**
+**Quality Data > Quality Prompt?** **Strongly Agree.**
 
-Dù bạn có viết một Prompt cực kỳ chi tiết, logic và chặt chẽ đến đâu, nếu dữ liệu đầu vào là "rác" thì kết quả trả ra vẫn sẽ là "rác". Bài thí nghiệm này khẳng định nguyên tắc cốt lõi: **"Garbage In, Garbage Out"**. 
+No matter how detailed, logical, or well-crafted a prompt is, if the input data is garbage, the output will also be garbage. This experiment reinforces the fundamental principle: **"Garbage In, Garbage Out."**
 
-Một AI Agent thông minh cần được xây dựng trên một nền tảng dữ liệu sạch (Clean Data). Việc đầu tư vào quy trình ETL và kiểm soát chất lượng dữ liệu (Data Quality Control) quan trọng hơn nhiều so với việc chỉ cố gắng tối ưu câu lệnh điều hướng, vì dữ liệu chính là "nguồn tri thức" duy nhất mà Agent dựa vào để thực hiện nhiệm vụ.
+A reliable AI Agent must be built on a foundation of clean data. Investing in ETL processes and data quality control is far more important than only optimizing prompts, because data is the primary source of knowledge that the Agent relies on to perform its tasks.
