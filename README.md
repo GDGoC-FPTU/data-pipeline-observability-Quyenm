@@ -1,47 +1,86 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=23573949&assignment_repo_type=AssignmentRepo)
 # Day 10 Lab: Data Pipeline & Data Observability
 
-**Student Email:** email@example.com
-**Name:** (Dien ten cua ban)
+**Student Email:** anhquyen9a10a@gmail.com
+**Name:** Nguyễn Mạnh Quyền 
 
 ---
 
-## Mo ta
+## Description
 
-(Mo ta ngan gon bai lab va nhung gi ban da lam)
+This lab builds an ETL pipeline that automatically reads product data from a JSON file, performs data quality validation, transforms the data, and outputs it to a CSV file. The pipeline removes records with invalid prices or empty categories, applies a 10% discount to prices, standardizes category names, and adds a processing timestamp.
+
+In addition, this lab includes a Stress Test experiment to observe how "dirty" data affects the responses of an AI Agent.
 
 ---
 
-## Cach chay (How to Run)
+## How to Run
 
 ### Prerequisites
+
 ```bash
 pip install pandas
 ```
 
-### Chay ETL Pipeline
+### Run ETL Pipeline
+
 ```bash
 python solution.py
 ```
 
-### Chay Agent Simulation (Stress Test)
+After running, check that the file `processed_data.csv` has been created.
+
+### Generate Garbage Data
+
 ```bash
-# Mo ta cach ban chay thi nghiem Clean vs Garbage data
+python generate_garbage.py
+```
+
+### Run Agent Simulation (Stress Test)
+
+Run the agent with clean data first, then with garbage data:
+
+```bash
+python agent_simulation.py
+```
+
+The agent will compare responses using `processed_data.csv` (clean data) and `garbage_data.csv` (poisoned data).
+
+---
+
+## Project Structure
+
+```
+├── solution.py              # ETL Pipeline script (Extract, Validate, Transform, Load)
+├── generate_garbage.py      # Script to generate garbage_data.csv for stress testing
+├── agent_simulation.py      # AI Agent simulation with two datasets
+├── raw_data.json            # Source data (5 records, 2 invalid)
+├── processed_data.csv       # Pipeline output (3 valid records)
+├── experiment_report.md     # Experiment report: Clean vs Garbage data
+└── README.md                # This file
 ```
 
 ---
 
-## Cau truc thu muc
+## Results
 
-```
-├── solution.py              # ETL Pipeline script
-├── processed_data.csv       # Output cua pipeline
-├── experiment_report.md     # Bao cao thi nghiem
-└── README.md                # File nay
-```
+* Total input records: **5**
+* Valid records (processed): **3** *(Laptop, Chair, Monitor)*
+* Removed records: **2**
+
+### Removed Record Details:
+
+* Record `id=3` (Mystery Box): negative price (-10) → violates rule `price > 0`
+* Record `id=4` (Phone): empty category → violates rule that category must not be empty
 
 ---
 
-## Ket qua
+## Output
 
-(Tom tat ket qua: bao nhieu records da xu ly, bao nhieu bi loai, v.v.)
+The file `processed_data.csv` contains the following columns:
+
+* `id`
+* `product`
+* `price`
+* `category`
+* `discounted_price`
+* `processed_at`

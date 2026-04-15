@@ -1,35 +1,41 @@
 # Experiment Report: Data Quality Impact on AI Agent
 
-**Student ID:** AI20K-XXXX
-**Name:** (Dien ten cua ban)
-**Date:** (Dien ngay thuc hien)
+**Student ID:** 2A202600481
+**Name:** Nguyễn Mạnh Quyền 
+**Date:** 2026-04-15  
 
 ---
 
-## 1. Ket qua thi nghiem
+## 1. Kết quả thí nghiệm
 
-Chay `agent_simulation.py` voi 2 bo du lieu va ghi lai ket qua:
+Chạy `agent_simulation.py` với 2 bộ dữ liệu và ghi lại kết quả:
 
 | Scenario | Agent Response | Accuracy (1-10) | Notes |
 |----------|----------------|-----------------|-------|
-| Clean Data (`processed_data.csv`) | (Ghi cau tra loi cua Agent) | | |
-| Garbage Data (`garbage_data.csv`) | (Ghi cau tra loi cua Agent) | | |
+| **Clean Data** (`processed_data.csv`) | "Based on my data, the best choice is Laptop at $1200." | 9 | Phản hồi chính xác và hữu ích. Laptop được xác định đúng là mặt hàng điện tử hàng đầu. |
+| **Garbage Data** (`garbage_data.csv`) | "Based on my data, the best choice is Nuclear Reactor at $999999." | 1 | Hoàn toàn sai. Agent đề xuất một giá trị ngoại lệ cực đoan rõ ràng không phải là sản phẩm thực tế. |
 
 ---
 
-## 2. Phan tich & nhan xet
+## 2. Phân tích & nhận xét
 
-### Tai sao Agent tra loi sai khi dung Garbage Data?
+### Tại sao Agent trả lời sai khi dùng Garbage Data?
 
-(Viet nhan xet cua ban o day — it nhat 50 tu)
+Khi dùng garbage data, Agent cho ra kết quả sai hoàn toàn vì dữ liệu đầu vào chứa nhiều vấn đề nghiêm trọng về cấu trúc và nội dung:
 
-(Hay phan tich cac van de nhu Duplicate IDs, wrong data types, outliers, null values
-va giai thich tai sao chung anh huong den ket qua cua Agent.)
+1.  **Outliers (Giá trị ngoại lệ):** Sự xuất hiện của "Nuclear Reactor" với mức giá cực lớn ($999,999) đã đánh lừa logic tìm kiếm của Agent. Agent chỉ đơn thuần quét qua các con số lớn nhất mà không có khả năng phân biệt được đây là một thực thể phi lý trong danh mục mua sắm thông thường.
+2.  **Duplicate IDs (Trùng lặp ID):** Việc tồn tại nhiều bản ghi có cùng ID (ví dụ id=1 xuất hiện hai lần) gây ra sự nhiễu loạn thông tin, làm cho tập dữ liệu mất đi tính nhất quán và duy nhất.
+3.  **Wrong Data Types (Sai kiểu dữ liệu):** Trường "price" chứa giá trị dạng chữ ("ten dollars") thay vì số khiến Agent không thể thực hiện các phép toán so sánh hoặc tính toán trung bình một cách chính xác.
+4.  **Null Values (Giá trị rỗng):** Các bản ghi bị thiếu ID hoặc Category nhưng vẫn lọt qua bộ lọc làm giảm độ tin cậy của toàn bộ hệ thống. 
+
+Tất cả những yếu tố trên chứng minh rằng nếu không có bước tiền xử lý và validation, Agent sẽ bị "mù quáng" tin vào dữ liệu sai lệch, dẫn đến các quyết định gây hại.
 
 ---
 
-## 3. Ket luan
+## 3. Kết luận
 
-**Quality Data > Quality Prompt?** (Dong y hay khong? Giai thich ngan gon.)
+**Quality Data > Quality Prompt?** **Đồng ý hoàn toàn.**
 
-(Viet ket luan cua ban o day)
+Dù bạn có viết một Prompt cực kỳ chi tiết, logic và chặt chẽ đến đâu, nếu dữ liệu đầu vào là "rác" thì kết quả trả ra vẫn sẽ là "rác". Bài thí nghiệm này khẳng định nguyên tắc cốt lõi: **"Garbage In, Garbage Out"**. 
+
+Một AI Agent thông minh cần được xây dựng trên một nền tảng dữ liệu sạch (Clean Data). Việc đầu tư vào quy trình ETL và kiểm soát chất lượng dữ liệu (Data Quality Control) quan trọng hơn nhiều so với việc chỉ cố gắng tối ưu câu lệnh điều hướng, vì dữ liệu chính là "nguồn tri thức" duy nhất mà Agent dựa vào để thực hiện nhiệm vụ.
